@@ -11,8 +11,6 @@ using namespace std;
 #define UNASSIGNED 0
 #define N 9
 
-int **puntero_matriz;
-
 bool FindUnassignedLocation(int matriz[N][N], int &row, int &col);
 bool isSafe(int matriz[N][N], int row, int col, int num);
 
@@ -140,53 +138,48 @@ bool esNumero(string valor)
 	}
 }
 
-void verInput(int matriz[N][N], string argumento, string pos_i, string pos_j, string num)
+
+/* Main */
+int main(int argc, char *argv[])
 {
-  int fila,columna,numero;
-  if (argumento.substr(0,1)=="[")
-  {
-    cout<<endl;
-    while(argumento!="")
-    {
-      pos_i=argumento.substr(1,1);
-      pos_j=argumento.substr(3,1);
-      num=argumento.substr(5,1);
-      if(esNumero(pos_i) && esNumero(pos_j) && esNumero(num) &&
-        Conv_Num(pos_i)>=0 && Conv_Num(pos_i)<9 && Conv_Num(pos_j)>=0 &&
-        Conv_Num(pos_j)<9 && Conv_Num(num)>=1 && Conv_Num(num)<=9)
-      {
-        fila=Conv_Num(pos_i);
-        columna=Conv_Num(pos_j);
-        numero = Conv_Num(num);
-        matriz[fila][columna]=numero;
+  int matriz[N][N],fila,columna,numero;
+  string argumento=argv[1];
+	string pos_i,pos_j,num;
+	
+  for(int i=0;i<N;i++)
+		for(int j=0;j<N;j++)
+			matriz[i][j]=0;
+
+      if (argumento.substr(0,1)=="[")
+    	{
+    		cout<<endl;
+    		while(argumento!="")
+    		{
+    			pos_i=argumento.substr(1,1);
+    			pos_j=argumento.substr(3,1);
+    			num=argumento.substr(5,1);
+    			if(esNumero(pos_i) && esNumero(pos_j) && esNumero(num) &&
+            Conv_Num(pos_i)>=0 && Conv_Num(pos_i)<9 && Conv_Num(pos_j)>=0 &&
+            Conv_Num(pos_j)<9 && Conv_Num(num)>=1 && Conv_Num(num)<=9)
+    			{
+            fila=Conv_Num(pos_i);
+      			columna=Conv_Num(pos_j);
+            numero = Conv_Num(num);
+            matriz[fila][columna]=numero;
+          }
+          else
+          {
+            cout<<"Error de formato"<<endl;
+          }
+          argumento=argumento.substr(7);
+        }
+        cout<<endl;
       }
       else
       {
         cout<<"Error de formato"<<endl;
       }
-      argumento=argumento.substr(7);
-    }
-    cout<<endl;
-  }
-  else
-  {
-    cout<<"Error de formato"<<endl;
-  }
-}
 
-
-/* Main */
-int main(int argc, char *argv[])
-{
-  int matriz[N][N];
-  string argumento=argv[1];
-	string pos_i,pos_j,num;
-
-  for(int i=0;i<N;i++)
-		for(int j=0;j<N;j++)
-		  matriz[i][j]=0;
-
-      verInput(matriz,argumento,pos_i,pos_j,num);
       if (SolveSudoku(matriz) == true)
       {
         printmatriz(matriz);
