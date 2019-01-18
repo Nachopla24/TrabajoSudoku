@@ -11,8 +11,6 @@ using namespace std;
 #define UNASSIGNED 0
 #define N 9
 
-int **puntero_matriz;
-
 bool FindUnassignedLocation(int matriz[N][N], int &row, int &col);
 bool isSafe(int matriz[N][N], int row, int col, int num);
 
