@@ -110,13 +110,14 @@ void csvmatriz(int matriz[N][N])
 }
 
 
-//Convierte numero del argc que es string creo xxd
+/* Convierte numero del argv[] que es string a integer */
 int Conv_Num(string valor)
 {
 	int n = atoi(valor.c_str());
     return n;
 }
 
+/* Verifica si el valor del argv[] es un numero */
 bool esNumero(string valor)
 {
 	if(Conv_Num(valor)==0)
@@ -138,25 +139,13 @@ bool esNumero(string valor)
 }
 
 
-/* Main
-Para ejecutar de ejemplo:
-./MpiSudoku "[0;1;4][0;3;8][1;0;5][2;1;7][2;3;4][2;4;6][3;0;6][3;1;9][3;2;8][3;3;5][3;4;3][3;5;7][3;6;2][3;8;4][4;1;3][4;2;5][4;4;2][5;5;4][5;7;9][5;8;3][6;4;7][6;6;3][7;0;7][7;1;8][7;3;1][7;7;6][8;3;3][8;4;9][8;6;7][8;7;4][8;8;8]"
-            [x;y;z]
-Donde:
-./ejecutable "[x;y;z]"
-
-x = corresponde a la fila del dato inicial;
-y = corresponde a el valor de y corresponde a la columna donde debe ir el dato;
-z = es valor que irá en la matriz (entre 1 y 9).
-*/
+/* Main */
 int main(int argc, char *argv[])
 {
   int matriz[N][N],fila,columna,numero;
   string argumento=argv[1];
-	string pos_i;
-	string pos_j;
-	string num;
-
+	string pos_i,pos_j,num;
+	
   for(int i=0;i<N;i++)
 		for(int j=0;j<N;j++)
 			matriz[i][j]=0;
@@ -169,7 +158,9 @@ int main(int argc, char *argv[])
     			pos_i=argumento.substr(1,1);
     			pos_j=argumento.substr(3,1);
     			num=argumento.substr(5,1);
-    			if(esNumero(pos_i) && esNumero(pos_j) && esNumero(num) && Conv_Num(pos_i)>=0 && Conv_Num(pos_i)<9 && Conv_Num(pos_j)>=0 && Conv_Num(pos_j)<9 && Conv_Num(num)>=1 && Conv_Num(num)<=9)
+    			if(esNumero(pos_i) && esNumero(pos_j) && esNumero(num) &&
+            Conv_Num(pos_i)>=0 && Conv_Num(pos_i)<9 && Conv_Num(pos_j)>=0 &&
+            Conv_Num(pos_j)<9 && Conv_Num(num)>=1 && Conv_Num(num)<=9)
     			{
             fila=Conv_Num(pos_i);
       			columna=Conv_Num(pos_j);
