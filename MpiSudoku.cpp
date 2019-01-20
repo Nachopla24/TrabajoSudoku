@@ -76,7 +76,7 @@ bool UsedInBox(int matriz[N][N], int boxStartRow, int boxStartCol, int num)
     return false;
 }
 
-/* Devuelve si será legal asignar un número a la fila dada, ubicación de columna.
+/* Devuelve si se puede asignar un número a la fila dada, ubicación de columna.
  */
 bool isSafe(int matriz[N][N], int row, int col, int num)
 {
@@ -141,7 +141,7 @@ bool esNumero(string valor)
 void verInput(int matriz[N][N], string argumento, string pos_i, string pos_j, string num)
 {
   int fila,columna,numero;
-  if (argumento.substr(0,1)=="[")
+  if (argumento.substr(0,1)=="[")//Valida la primera entrada
   {
     cout<<endl;
     while(argumento!="")
@@ -160,7 +160,8 @@ void verInput(int matriz[N][N], string argumento, string pos_i, string pos_j, st
       }
       else
       {
-        cout<<"Error de formato"<<endl;
+        cout<<"Error de formato, intentalo nuevamente"<<endl<<endl;
+        exit(1);
       }
       argumento=argumento.substr(7);
     }
@@ -168,7 +169,8 @@ void verInput(int matriz[N][N], string argumento, string pos_i, string pos_j, st
   }
   else
   {
-    cout<<"Error de formato"<<endl;
+    cout<<"Error de formato, intentalo nuevamente"<<endl<<endl;
+    exit(1);
   }
 }
 
@@ -187,10 +189,11 @@ int main(int argc, char *argv[])
       verInput(matriz,argumento,pos_i,pos_j,num);
       if (SolveSudoku(matriz) == true)
       {
-        printmatriz(matriz);
+        //printmatriz(matriz);
         csvmatriz(matriz);
+        cout<<"Resultado generado con exito"<<endl;
       }
       else
-          cout<<"No solution exists"<<endl;
+          cout<<"No existe solucion"<<endl;
       return 0;
 }

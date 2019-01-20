@@ -6,12 +6,16 @@
 #include <string>
 #include <mpi.h>
 
+/*
+mpirun MpiSudokuParalelo "[0;3;4][0;5;2][0;8;3][1;0;3][1;6;4][1;7;2][1;8;9][2;1;2][2;5;7][2;7;5][3;1;4][3;2;7][3;3;2][3;5;5][3;7;3][3;8;8][4;5;8][4;8;7][5;1;8][5;2;5][5;5;9][5;7;4][5;8;1][6;3;8][6;6;6][7;0;2][7;1;9][7;2;3][7;8;4][8;0;8][8;1;6]"
+*/
+
 
 using namespace std;
 
 #define UNASSIGNED 0
 #define N 9
-#define MASTER 0
+
 
 
 bool FindUnassignedLocation(int **matriz, int &row, int &col);
@@ -79,7 +83,7 @@ bool UsedInBox(int **matriz, int boxStartRow, int boxStartCol, int num)
     return false;
 }
 
-/* Devuelve si será legal asignar un número a la fila dada, ubicación de columna.
+/* Devuelve si se puede asignar un número a la fila dada, ubicación de columna.
  */
 bool isSafe(int **matriz, int row, int col, int num)
 {
@@ -163,7 +167,8 @@ void verInput(int **matriz, string argumento, string pos_i, string pos_j, string
       }
       else
       {
-        cout<<"Error de formato"<<endl;
+        cout<<"Error de formato, intentalo nuevamente"<<endl<<endl;
+        exit(1);
       }
       argumento=argumento.substr(7);
     }
@@ -171,7 +176,8 @@ void verInput(int **matriz, string argumento, string pos_i, string pos_j, string
   }
   else
   {
-    cout<<"Error de formato"<<endl;
+    cout<<"Error de formato, intentalo nuevamente"<<endl<<endl;
+    exit(1);
   }
 }
 
@@ -213,11 +219,12 @@ int main(int argc, char *argv[])
     verInput(matriz,argumento,pos_i,pos_j,num);
       if (SolveSudoku(matriz) == true)
       {
-        printmatriz(matriz);
+        //printmatriz(matriz);
         csvmatriz(matriz);
+        cout<<"Resultado generado con exito"<<endl;
       }
       else
-          cout<<"No solution exists"<<endl;
+          cout<<"No existe solucion "<<endl;
   }
   MPI_Finalize();
 }
