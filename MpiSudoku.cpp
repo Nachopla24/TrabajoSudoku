@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <string>
+#include <ctime>
 
 
 using namespace std;
@@ -11,12 +12,11 @@ using namespace std;
 #define UNASSIGNED 0
 #define N 9
 
+
 bool BuscarNoAsignado(int matriz[N][N], int &fila, int &columna);
 bool EsSeguro(int matriz[N][N], int fila, int columna, int numero);
 
-/*
-asigna valores a todas las ubicaciones no asignadas para resolver el Sudoku
- */
+/* asigna valores a todas las ubicaciones no asignadas para resolver el Sudoku */
 bool ResolverSudoku(int matriz[N][N])
 {
     int fila, columna;
@@ -35,7 +35,7 @@ bool ResolverSudoku(int matriz[N][N])
     return false;
 }
 
-/* Busca en la matriz para encontrar una entrada que aún no esté asignada. */
+/* Busca en la matriz para encontrar una entrada que aún no esté asignada */
 bool BuscarNoAsignado(int matriz[N][N], int &fila, int &columna)
 {
     for (fila = 0; fila < N; fila++)
@@ -45,8 +45,8 @@ bool BuscarNoAsignado(int matriz[N][N], int &fila, int &columna)
     return false;
 }
 
-/* Devuelve si alguna entrada asignada en la fila especificada coincide con el número dado.
- */
+/* Devuelve si alguna entrada asignada en la fila especificada coincide con el
+número dado */
 bool VefiricarFila(int matriz[N][N], int fila, int numero)
 {
     for (int columna = 0; columna < N; columna++)
@@ -76,8 +76,7 @@ bool VefiricarSubmatriz(int matriz[N][N], int boxStartfila, int boxStartcolumna,
     return false;
 }
 
-/* Devuelve si se puede asignar un número a la fila dada, ubicación de columna.
- */
+/* Devuelve si se puede asignar un número a la fila dada, ubicación de columna */
 bool EsSeguro(int matriz[N][N], int fila, int columna, int numero)
 {
     return !VefiricarFila(matriz, fila, numero) && !VerificarColumna(matriz, columna, numero) &&
@@ -111,7 +110,7 @@ void csvmatriz(int matriz[N][N])
 
 
 /* Convierte numero del argv[] que es string a integer */
-int Convertir_numero(string valor)
+int ConvertirNumero(string valor)
 {
 	int n = atoi(valor.c_str());
     return n;
@@ -120,7 +119,7 @@ int Convertir_numero(string valor)
 /* Verifica si el valor del argv[] es un numero */
 bool EsNumero(string valor)
 {
-	if(Convertir_numero(valor)==0)
+	if(ConvertirNumero(valor)==0)
   {
 		return true;
 	}
@@ -150,12 +149,12 @@ void VerEntrada(int matriz[N][N], string argumento, string pos_i, string pos_j, 
       pos_j=argumento.substr(3,1);
       numero=argumento.substr(5,1);
       if(EsNumero(pos_i) && EsNumero(pos_j) && EsNumero(numero) &&
-        Convertir_numero(pos_i)>=0 && Convertir_numero(pos_i)<9 && Convertir_numero(pos_j)>=0 &&
-        Convertir_numero(pos_j)<9 && Convertir_numero(numero)>=1 && Convertir_numero(numero)<=9)
+        ConvertirNumero(pos_i)>=0 && ConvertirNumero(pos_i)<9 && ConvertirNumero(pos_j)>=0 &&
+        ConvertirNumero(pos_j)<9 && ConvertirNumero(numero)>=1 && ConvertirNumero(numero)<=9)
       {
-        fila=Convertir_numero(pos_i);
-        columna=Convertir_numero(pos_j);
-        numero1 = Convertir_numero(numero);
+        fila=ConvertirNumero(pos_i);
+        columna=ConvertirNumero(pos_j);
+        numero1 = ConvertirNumero(numero);
         matriz[fila][columna]=numero1;
       }
       else
@@ -178,10 +177,11 @@ void VerEntrada(int matriz[N][N], string argumento, string pos_i, string pos_j, 
 /* Main */
 int main(int argc, char *argv[])
 {
+  unsigned t0, t1;
   int matriz[N][N];
   string argumento=argv[1];
 	string pos_i,pos_j,numero;
-
+  t0=clock();
   for(int i=0;i<N;i++)
 		for(int j=0;j<N;j++)
 		  matriz[i][j]=0;
@@ -195,5 +195,8 @@ int main(int argc, char *argv[])
       }
       else
           cout<<"No existe solucion"<<endl;
+      t1 = clock();
+      double time = (double(t1-t0)/CLOCKS_PER_SEC);
+      cout << "Tiempo de Ejecucion: " << time << endl;
       return 0;
 }
