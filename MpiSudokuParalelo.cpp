@@ -18,86 +18,86 @@ using namespace std;
 
 
 
-bool FindUnassignedLocation(int **matriz, int &row, int &col);
-bool isSafe(int **matriz, int row, int col, int num);
+bool BuscarNoAsignado(int **matriz, int &fila, int &columna);
+bool EsSeguro(int **matriz, int fila, int columna, int numero);
 
 /*
 asigna valores a todas las ubicaciones no asignadas para resolver el Sudoku
  */
-bool SolveSudoku(int **matriz)
+bool ResolverSudoku(int **matriz)
 {
-    int row, col;
-    if (!FindUnassignedLocation(matriz, row, col))
+    int fila, columna;
+    if (!BuscarNoAsignado(matriz, fila, columna))
        return true;
-    for (int num = 1; num <= 9; num++)
+    for (int numero = 1; numero <= 9; numero++)
     {
-        if (isSafe(matriz, row, col, num))
+        if (EsSeguro(matriz, fila, columna, numero))
         {
-            matriz[row][col] = num;
-            if (SolveSudoku(matriz))
+            matriz[fila][columna] = numero;
+            if (ResolverSudoku(matriz))
                 return true;
-            matriz[row][col] = UNASSIGNED;
+            matriz[fila][columna] = UNASSIGNED;
         }
     }
     return false;
 }
 
 /* Busca en la matriz para encontrar una entrada que aún no esté asignada. */
-bool FindUnassignedLocation(int **matriz, int &row, int &col)
+bool BuscarNoAsignado(int **matriz, int &fila, int &columna)
 {
-    for (row = 0; row < N; row++)
-        for (col = 0; col < N; col++)
-            if (matriz[row][col] == UNASSIGNED)
+    for (fila = 0; fila < N; fila++)
+        for (columna = 0; columna < N; columna++)
+            if (matriz[fila][columna] == UNASSIGNED)
                 return true;
     return false;
 }
 
 /* Devuelve si alguna entrada asignada en la fila especificada coincide con el número dado.
  */
-bool UsedInRow(int **matriz, int row, int num)
+bool VerificarFila(int **matriz, int fila, int numero)
 {
-    for (int col = 0; col < N; col++)
-        if (matriz[row][col] == num)
+    for (int columna = 0; columna < N; columna++)
+        if (matriz[fila][columna] == numero)
             return true;
     return false;
 }
 
 /* Devuelve si alguna entrada asignada en la columna especificada coincide
-   el numero dado */
-bool UsedInCol(int **matriz, int col, int num)
+   el numero1 dado */
+bool VerificarColumna(int **matriz, int columna, int numero)
 {
-    for (int row = 0; row < N; row++)
-        if (matriz[row][col] == num)
+    for (int fila = 0; fila < N; fila++)
+        if (matriz[fila][columna] == numero)
             return true;
     return false;
 }
 
 /* Devuelve si alguna entrada asignada dentro del cuadro 3x3 especificado coincide
-   el numero dado */
-bool UsedInBox(int **matriz, int boxStartRow, int boxStartCol, int num)
+   el numero1 dado */
+bool VerificarSubmatriz(int **matriz, int boxStartfila, int boxStartcolumna, int numero)
 {
-    for (int row = 0; row < 3; row++)
-        for (int col = 0; col < 3; col++)
-            if (matriz[row+boxStartRow][col+boxStartCol] == num)
+    for (int fila = 0; fila < 3; fila++)
+        for (int columna = 0; columna < 3; columna++)
+            if (matriz[fila+boxStartfila][columna+boxStartcolumna] == numero)
                 return true;
     return false;
 }
 
 /* Devuelve si se puede asignar un número a la fila dada, ubicación de columna.
  */
-bool isSafe(int **matriz, int row, int col, int num)
+bool EsSeguro(int **matriz, int fila, int columna, int numero)
 {
-    return !UsedInRow(matriz, row, num) && !UsedInCol(matriz, col, num) &&
-           !UsedInBox(matriz, row - row % 3 , col - col % 3, num);
+    return !VerificarFila(matriz, fila, numero) && !VerificarColumna(matriz, columna, numero) &&
+           !VerificarSubmatriz(matriz, fila - fila % 3 , columna - columna % 3, numero);
 }
 
 /* Imprime la matriz */
-void printmatriz(int **matriz)
+void Mostrarmatriz(int **matriz)
 {
-    for (int row = 0; row < N; row++)
+    for (int fila = 0; fila < N; fila++)
     {
-        for (int col = 0; col < N; col++)
-            cout<<matriz[row][col]<<"  ";
+        for (int columna = 0; columna < N; columna++)
+            cout<<matriz[fila][columna]<<"  ";
         cout<<endl;
     }
 }
@@ -106,7 +106,7 @@ void printmatriz(int **matriz)
 void csvmatriz(int **matriz)
 {
   ofstream archivo;
-  archivo.open("solucion.csv");
+  archivo.open("solucionparalelo.csv");
   for(int g=0;g<N;g++)
     for(int h=0;h<N;h++)
       if(h<8)
@@ -117,17 +117,17 @@ void csvmatriz(int **matriz)
 }
 
 
-/* Convierte numero del argv[] que es string a integer */
-int Conv_Num(string valor)
+/* Convierte numero1 del argv[] que es string a integer */
+int Convertir_numero(string valor)
 {
 	int n = atoi(valor.c_str());
     return n;
 }
 
-/* Verifica si el valor del argv[] es un numero */
-bool esNumero(string valor)
+/* Verifica si el valor del argv[] es un numero1 */
+bool EsNumero(string valor)
 {
-	if(Conv_Num(valor)==0)
+	if(Convertir_numero(valor)==0)
   {
 		return true;
 	}
@@ -145,9 +145,9 @@ bool esNumero(string valor)
 	}
 }
 
-void verInput(int **matriz, string argumento, string pos_i, string pos_j, string num)
+void VerEntrada(int **matriz, string argumento, string pos_i, string pos_j, string numero)
 {
-  int fila,columna,numero;
+  int fila,columna,numero1;
   if (argumento.substr(0,1)=="[")
   {
     cout<<endl;
@@ -155,15 +155,15 @@ void verInput(int **matriz, string argumento, string pos_i, string pos_j, string
     {
       pos_i=argumento.substr(1,1);
       pos_j=argumento.substr(3,1);
-      num=argumento.substr(5,1);
-      if(esNumero(pos_i) && esNumero(pos_j) && esNumero(num) &&
-        Conv_Num(pos_i)>=0 && Conv_Num(pos_i)<9 && Conv_Num(pos_j)>=0 &&
-        Conv_Num(pos_j)<9 && Conv_Num(num)>=1 && Conv_Num(num)<=9)
+      numero=argumento.substr(5,1);
+      if(EsNumero(pos_i) && EsNumero(pos_j) && EsNumero(numero) &&
+        Convertir_numero(pos_i)>=0 && Convertir_numero(pos_i)<9 && Convertir_numero(pos_j)>=0 &&
+        Convertir_numero(pos_j)<9 && Convertir_numero(numero)>=1 && Convertir_numero(numero)<=9)
       {
-        fila=Conv_Num(pos_i);
-        columna=Conv_Num(pos_j);
-        numero = Conv_Num(num);
-        matriz[fila][columna]=numero;
+        fila=Convertir_numero(pos_i);
+        columna=Convertir_numero(pos_j);
+        numero1 = Convertir_numero(numero);
+        matriz[fila][columna]=numero1;
       }
       else
       {
@@ -182,12 +182,12 @@ void verInput(int **matriz, string argumento, string pos_i, string pos_j, string
 }
 
 
-int **asignarMem(int rows, int cols)
+int **asignarMem(int filas, int columnas)
 {
-    int *data = (int *)malloc(rows*cols*sizeof(int));
-    int **array= (int **)malloc(rows*sizeof(int*));
-    for (int i=0; i<rows; i++)
-        array[i] = &(data[cols*i]);
+    int *data = (int *)malloc(filas*columnas*sizeof(int));
+    int **array= (int **)malloc(filas*sizeof(int*));
+    for (int i=0; i<filas; i++)
+        array[i] = &(data[columnas*i]);
 
     return array;
 }
@@ -198,7 +198,7 @@ int main(int argc, char *argv[])
 {
   int **matriz,rank,size;
   string argumento=argv[1];
-	string pos_i,pos_j,num;
+	string pos_i,pos_j,numero;
 
   MPI_Init(&argc,&argv);
   MPI_Comm_rank(MPI_COMM_WORLD,&rank);
@@ -216,10 +216,10 @@ int main(int argc, char *argv[])
 
   if (rank == 1)
   {
-    verInput(matriz,argumento,pos_i,pos_j,num);
-      if (SolveSudoku(matriz) == true)
+    VerEntrada(matriz,argumento,pos_i,pos_j,numero);
+      if (ResolverSudoku(matriz) == true)
       {
-        //printmatriz(matriz);
+        //Mostrarmatriz(matriz);
         csvmatriz(matriz);
         cout<<"Resultado generado con exito"<<endl;
       }
